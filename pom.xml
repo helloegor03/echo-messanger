@@ -10,6 +10,7 @@
   <modules>
     <module>profile-service</module>
     <module>auth-service</module>
+    <module>friend-service</module>
 
 
 
