@@ -1,8 +1,10 @@
-package com.example.auth_service.config;
+package com.helloegor03.friend_service.config;
 
-
-import com.example.auth_service.user.UserDetailsImpl;
-import io.jsonwebtoken.*;
+import com.helloegor03.friend_service.model.UserDetailsImpl;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -30,7 +32,6 @@ public class JwtUtil {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
-                .claim("userId", userDetails.getId())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -44,6 +45,20 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
+    }
+
+    public Long getUserIdFromToken(String token) {
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+            return claims.get("userId", Long.class);
+        } catch (JwtException e) {
+            System.out.println("JWT parsing error: " + e.getMessage());
+            return null;
+        }
     }
 
     public boolean validateJwtToken(String token) {

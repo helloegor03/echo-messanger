@@ -1,0 +1,27 @@
+server:
+  port: 8050
+
+spring:
+  application:
+  name: friend-service
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: egorik1234566
+  jpa:
+    hibernate:
+      ddl-auto: create
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+
+token:
+  signing:
+    key: eryejgfkgrekgrelgrhgfhgfhtehghrfteghfbvcbmefdsewtrw
+    lifetime: 3600000
+
