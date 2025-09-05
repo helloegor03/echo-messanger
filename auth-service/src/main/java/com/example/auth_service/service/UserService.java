@@ -34,14 +34,15 @@ public class UserService {
         }
     }
 
-    public void registerUser(User user){
+    public User registerUser(User user){
         if(userRepository.findByUsername(user.getUsername()).isPresent()){
             throw new RuntimeException("User with this username is already present");
-        }else {
+        } else {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            userRepository.save(user);
+            return userRepository.save(user);
         }
     }
+
 
     private Authentication autheticateUser(User user) throws AuthenticationException {
         try {

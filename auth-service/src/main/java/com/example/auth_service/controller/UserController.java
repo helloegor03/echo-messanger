@@ -1,7 +1,9 @@
 package com.example.auth_service.controller;
 
+import com.example.auth_service.dto.UserCreatedEvent;
 import com.example.auth_service.service.UserService;
 import com.example.auth_service.user.User;
+import com.example.auth_service.service.UserEventProducer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,8 +12,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class UserController {
     private final UserService userService;
+    private final UserEventProducer userEventProducer;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserEventProducer userEventProducer) {
+        this.userEventProducer = userEventProducer;
         this.userService = userService;
     }
 
@@ -28,7 +32,10 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user){
         try {
-            userService.registerUser(user);
+            User savedUser = userService.registerUser(user);
+            userEventProducer.sendUserCreated(
+                    new UserCreatedEvent(savedUser.getId(), savedUser.getUsername())
+            );
             return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
         } catch (RuntimeException e){
             return ResponseEntity.badRequest().body(e.getMessage());

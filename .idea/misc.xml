@@ -7,6 +7,8 @@
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$USER_HOME$/Downloads/auth-service/pom.xml" />
         <option value="$USER_HOME$/Downloads/profile-service/pom.xml" />
+        <option value="$USER_HOME$/Downloads/friend-service/pom.xml" />
+        <option value="$USER_HOME$/Downloads/discovery/pom.xml" />
       </list>
     </option>
   </component>
