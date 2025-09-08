@@ -1,20 +1,20 @@
-package com.example.auth_service.service;
+package com.helloegor03.friend_service.service;
 
-import com.example.auth_service.dto.UserCreatedEvent;
+import com.helloegor03.friend_service.dto.FriendEvent;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserEventProducer {
-    private final KafkaTemplate<String, UserCreatedEvent> kafkaTemplate;
+public class FriendEventProducer {
+    private final KafkaTemplate<String, FriendEvent> kafkaTemplate;
 
-    public UserEventProducer(KafkaTemplate<String, UserCreatedEvent> kafkaTemplate) {
+    public FriendEventProducer(KafkaTemplate<String, FriendEvent> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public void sendUserCreated(UserCreatedEvent event) {
+    public void sendUserFriend(FriendEvent event) {
         System.out.println("TRY SEND EVENT: " + event);
-        kafkaTemplate.send("user-created-topic", event).whenComplete((result, ex) -> {
+        kafkaTemplate.send("add-friend-topic", event).whenComplete((result, ex) -> {
             if (ex != null) {
                 System.err.println("Failed to send: " + ex.getMessage());
             } else {

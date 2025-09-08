@@ -19,11 +19,6 @@ public class UserEventConsumer {
         this.userCacheRepository = userCacheRepository;
     }
 
-    @PostConstruct
-    public void init() {
-        System.out.println("👂 UserEventConsumer initialized!");
-    }
-
     @KafkaListener(
             topics = "user-created-topic",
             groupId = "friend-service",
@@ -38,7 +33,7 @@ public class UserEventConsumer {
         userCache.setUsername(username);
 
         userCacheRepository.save(userCache);
-        System.out.println("✅ Event saved: " + username);
+        System.out.println("Event saved: " + username);
     }
 
 }

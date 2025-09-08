@@ -1,6 +1,7 @@
-package com.helloegor03.friend_service.config;
+package com.helloegor03.chat_service.config;
 
-import com.helloegor03.friend_service.service.UserDetailsServiceImpl;
+
+import com.helloegor03.chat_service.service.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -73,6 +74,4 @@ public class SecurityConfig {
         http.addFilterBefore(authenticationJwtTokenFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-
-
 }

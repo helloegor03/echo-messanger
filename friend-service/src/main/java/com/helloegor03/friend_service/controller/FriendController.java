@@ -2,7 +2,8 @@ package com.helloegor03.friend_service.controller;
 
 import com.helloegor03.friend_service.dto.AddFriendRequest;
 import com.helloegor03.friend_service.dto.FriendDto;
-import com.helloegor03.friend_service.model.Friend;
+import com.helloegor03.friend_service.dto.FriendEvent;
+import com.helloegor03.friend_service.service.FriendEventProducer;
 import com.helloegor03.friend_service.service.FriendService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +15,11 @@ import java.util.List;
 public class FriendController {
 
     private final FriendService friendService;
+    private final FriendEventProducer friendEventProducer;
 
-    public FriendController(FriendService friendService) {
+    public FriendController(FriendService friendService, FriendEventProducer friendEventProducer) {
         this.friendService = friendService;
+        this.friendEventProducer = friendEventProducer;
     }
 
     @PostMapping("/add")
@@ -26,6 +29,12 @@ public class FriendController {
     ) {
         String jwt = authHeader.substring(7);
         var friend = friendService.addFriendByUsername(request.getUsername(), jwt);
+
+
+        friendEventProducer.sendUserFriend(
+                new FriendEvent(friend.getUserId(), friend.getFriendId())
+        );
+
         return ResponseEntity.ok(friend);
     }
 
