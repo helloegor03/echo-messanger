@@ -33,14 +33,19 @@ public class UserController {
     public ResponseEntity<?> registerUser(@RequestBody User user){
         try {
             User savedUser = userService.registerUser(user);
+
+            System.out.println("Sending UserCreatedEvent for user: " + savedUser.getUsername() + ", id: " + savedUser.getId());
+
             userEventProducer.sendUserCreated(
                     new UserCreatedEvent(savedUser.getId(), savedUser.getUsername())
             );
+
             return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
         } catch (RuntimeException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
 
     @DeleteMapping("/users/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id){

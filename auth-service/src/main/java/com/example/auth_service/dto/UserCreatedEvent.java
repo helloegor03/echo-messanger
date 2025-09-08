@@ -1,14 +1,16 @@
 package com.example.auth_service.dto;
 
+
 public class UserCreatedEvent {
-    public Long userId;
-    public String username;
+    private Long userId;
+    private String username;
+
+    public UserCreatedEvent() {}
 
     public UserCreatedEvent(Long userId, String username) {
         this.userId = userId;
         this.username = username;
     }
-
 
     public Long getUserId() {
         return userId;

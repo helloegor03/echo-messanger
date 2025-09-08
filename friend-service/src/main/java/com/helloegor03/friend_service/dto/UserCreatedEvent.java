@@ -1,6 +1,5 @@
 package com.helloegor03.friend_service.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UserCreatedEvent {
     private Long userId;

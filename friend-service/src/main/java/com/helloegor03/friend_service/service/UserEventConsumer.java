@@ -4,8 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.helloegor03.friend_service.dto.UserCreatedEvent;
 import com.helloegor03.friend_service.model.UserCache;
 import com.helloegor03.friend_service.repository.UserCacheRepository;
+import jakarta.annotation.PostConstruct;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 @Service
 public class UserEventConsumer {
@@ -16,20 +19,26 @@ public class UserEventConsumer {
         this.userCacheRepository = userCacheRepository;
     }
 
+    @PostConstruct
+    public void init() {
+        System.out.println("👂 UserEventConsumer initialized!");
+    }
+
     @KafkaListener(
             topics = "user-created-topic",
             groupId = "friend-service",
-            containerFactory = "userCreatedEventKafkaListenerContainerFactory"
+            containerFactory = "userCreatedKafkaListenerContainerFactory"
     )
-    public void consume(UserCreatedEvent event) {
-        System.out.println("🚀 Received event: " + event);
+    public void consume(Map<String, Object> event) {
+        Long userId = ((Number) event.get("userId")).longValue();
+        String username = (String) event.get("username");
 
         UserCache userCache = new UserCache();
-        userCache.setUserId(event.getUserId());
-        userCache.setUsername(event.getUsername());
+        userCache.setUserId(userId);
+        userCache.setUsername(username);
 
         userCacheRepository.save(userCache);
-
-        System.out.println("✅ Event saved in echouserscache: " + event.getUsername());
+        System.out.println("✅ Event saved: " + username);
     }
+
 }
