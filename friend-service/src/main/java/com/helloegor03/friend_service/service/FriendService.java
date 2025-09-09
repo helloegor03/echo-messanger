@@ -27,7 +27,6 @@ public class FriendService {
     public Friend addFriendByUsername(String username, String token) {
         Long userId = jwtUtil.getUserIdFromToken(token);
 
-
         UserCache friendUser = userCacheRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -36,15 +35,23 @@ public class FriendService {
         }
 
         boolean exists = friendRepository.findByUserIdAndFriendId(userId, friendUser.getUserId()).isPresent();
-        if (exists) {
-            throw new RuntimeException("User is already your friend");
+        if (!exists) {
+            Friend friend = new Friend();
+            friend.setUserId(userId);
+            friend.setFriendId(friendUser.getUserId());
+            friendRepository.save(friend);
         }
 
-        Friend friend = new Friend();
-        friend.setUserId(userId);
-        friend.setFriendId(friendUser.getUserId());
+        boolean reverseExists = friendRepository.findByUserIdAndFriendId(friendUser.getUserId(), userId).isPresent();
+        if (!reverseExists) {
+            Friend reverseFriend = new Friend();
+            reverseFriend.setUserId(friendUser.getUserId());
+            reverseFriend.setFriendId(userId);
+            friendRepository.save(reverseFriend);
+        }
 
-        return friendRepository.save(friend);
+        // возвращаем запись для первого пользователя
+        return friendRepository.findByUserIdAndFriendId(userId, friendUser.getUserId()).get();
     }
 
     public List<FriendDto> getAllFriends(String token) {

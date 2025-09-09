@@ -1,5 +1,6 @@
 package com.helloegor03.chat_service.controller;
 
+import com.helloegor03.chat_service.dto.SendMessageRequest;
 import com.helloegor03.chat_service.model.Message;
 import com.helloegor03.chat_service.service.MessageService;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +21,12 @@ public class MessageController {
     public ResponseEntity<Message> sendMessage(
             @RequestHeader("Authorization") String authHeader,
             @PathVariable Long receiverId,
-            @RequestBody String text
+            @RequestBody SendMessageRequest request
     ) {
         String jwt = authHeader.substring(7);
-        return ResponseEntity.ok(messageService.sendMessage(jwt, receiverId, text));
+        return ResponseEntity.ok(messageService.sendMessage(jwt, receiverId, request.text()));
     }
+
 
     @GetMapping("/history/{friendId}")
     public ResponseEntity<List<Message>> getHistory(
