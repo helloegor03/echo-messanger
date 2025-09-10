@@ -1,0 +1,31 @@
+spring:
+  application:
+  name: profile-service
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: create
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  cloud:
+    compatibility-verifier:
+      enabled: false
+server:
+  port: 8070
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+
+token:
+  signing:
+    key: ${YOUR_SECRET_KEY}
+    lifetime: 3600000
+
+
+
