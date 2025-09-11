@@ -1,5 +1,6 @@
 package com.helloegor03.chat_service.controller;
 
+import com.helloegor03.chat_service.dto.ChatHistoryResponse;
 import com.helloegor03.chat_service.dto.SendMessageRequest;
 import com.helloegor03.chat_service.model.Message;
 import com.helloegor03.chat_service.service.MessageService;
@@ -29,7 +30,7 @@ public class MessageController {
 
 
     @GetMapping("/history/{friendId}")
-    public ResponseEntity<List<Message>> getHistory(
+    public ResponseEntity<ChatHistoryResponse> getHistory(
             @RequestHeader("Authorization") String authHeader,
             @PathVariable Long friendId
     ) {

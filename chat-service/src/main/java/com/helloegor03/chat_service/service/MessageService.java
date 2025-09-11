@@ -1,6 +1,7 @@
 package com.helloegor03.chat_service.service;
 
 import com.helloegor03.chat_service.config.JwtUtil;
+import com.helloegor03.chat_service.dto.ChatHistoryResponse;
 import com.helloegor03.chat_service.model.Message;
 import com.helloegor03.chat_service.repository.MessageRepository;
 
@@ -29,8 +30,9 @@ public class MessageService {
         return messageRepository.save(msg);
     }
 
-    public List<Message> getChatHistory(String jwt, Long friendId) {
+    public ChatHistoryResponse getChatHistory(String jwt, Long friendId) {
         Long userId = jwtUtil.getUserIdFromToken(jwt);
-        return messageRepository.findChatHistory(userId, friendId);
+        List<Message> history = messageRepository.findChatHistory(userId, friendId);
+        return new ChatHistoryResponse(userId, history);
     }
 }
